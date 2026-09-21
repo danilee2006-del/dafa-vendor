@@ -1,0 +1,2653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DAFA Vendor Management System</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#f5f7fb;color:#1e293b}
+
+#loginScreen,#registerScreen{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#f8fafc
+}
+
+.login-box{
+    width:400px;
+    background:white;
+    padding:40px;
+    border-radius:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,.10)
+}
+
+.logo{text-align:center;margin-bottom:30px}
+.logo h1{color:#ea580c;font-size:34px}
+.logo p{color:#64748b;margin-top:8px}
+
+.input-group{margin-bottom:18px}
+.input-group label{
+    display:block;
+    margin-bottom:7px;
+    font-weight:bold
+}
+
+.input-group input,
+.input-group select{
+    width:100%;
+    padding:12px;
+    border:1px solid #cbd5e1;
+    border-radius:8px;
+    outline:none
+}
+
+.input-group input:focus,
+.input-group select:focus{
+    border-color:#ea580c
+}
+
+.btn{
+    padding:12px 18px;
+    border:0;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold
+}
+
+.btn-primary{
+    background:#ea580c;
+    color:white
+}
+
+.btn-primary:hover{background:#c2410c}
+
+.btn-secondary{
+    background:#e2e8f0;
+    color:#1e293b
+}
+
+.auth-switch{
+    text-align:center;
+    margin-top:18px;
+    font-size:14px
+}
+
+.auth-switch span{
+    color:#ea580c;
+    cursor:pointer;
+    font-weight:bold
+}
+
+#mainApp{display:none}
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:240px;
+    height:100vh;
+    background:#0f172a;
+    color:white;
+    padding:25px 15px
+}
+
+.sidebar h2{
+    text-align:center;
+    margin-bottom:30px;
+    color:#fb923c
+}
+
+.menu button{
+    width:100%;
+    background:none;
+    border:0;
+    color:#cbd5e1;
+    padding:14px;
+    text-align:left;
+    border-radius:8px;
+    cursor:pointer;
+    margin-bottom:5px;
+    font-size:15px
+}
+
+.menu button:hover,
+.menu button.active{
+    background:#1e293b;
+    color:white
+}
+
+.logout{
+    position:absolute;
+    bottom:25px;
+    left:15px;
+    width:210px;
+    padding:12px;
+    background:#dc2626;
+    color:white;
+    border:0;
+    border-radius:8px;
+    cursor:pointer
+}
+
+.content{
+    margin-left:240px;
+    padding:30px
+}
+
+.topbar{
+    background:white;
+    padding:20px 25px;
+    border-radius:12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+    box-shadow:0 2px 8px rgba(0,0,0,.05)
+}
+
+.user-info{color:#64748b}
+
+.section{display:none}
+.section.active{display:block}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:25px
+}
+
+.card{
+    background:white;
+    padding:22px;
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.05)
+}
+
+.card h4{
+    color:#64748b;
+    margin-bottom:10px
+}
+
+.card h2{color:#ea580c}
+
+.budget-card{
+    background:white;
+    padding:22px;
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.05);
+    margin-bottom:25px
+}
+
+.budget-card h4{
+    color:#64748b;
+    margin-bottom:8px
+}
+
+.budget-card h2{
+    color:#ea580c;
+    margin-bottom:8px
+}
+
+.budget-info,
+.used-info{
+    color:#64748b;
+    font-size:14px
+}
+
+.used-info{margin-top:8px}
+
+.progress{
+    width:100%;
+    height:10px;
+    background:#e2e8f0;
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:12px
+}
+
+.progress-bar{
+    height:100%;
+    width:0%;
+    background:#ea580c;
+    transition:.3s
+}
+
+.table-box{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.05);
+    overflow-x:auto;
+    margin-bottom:20px
+}
+
+.table-box h3{margin-bottom:18px}
+
+table{
+    width:100%;
+    border-collapse:collapse
+}
+
+th,td{
+    padding:12px;
+    border-bottom:1px solid #e2e8f0;
+    text-align:left;
+    font-size:14px
+}
+
+th{background:#f8fafc}
+
+.action-btn{
+    border:0;
+    padding:7px 10px;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:12px;
+    margin:2px
+}
+
+.view-btn{
+    background:#dbeafe;
+    color:#1d4ed8
+}
+
+.status-btn{
+    background:#fef3c7;
+    color:#92400e
+}
+
+.delete-btn{
+    background:#fee2e2;
+    color:#991b1b
+}
+
+.badge{
+    padding:5px 9px;
+    border-radius:15px;
+    font-size:12px;
+    font-weight:bold;
+    display:inline-block
+}
+
+.success{
+    background:#dcfce7;
+    color:#166534
+}
+
+.warning{
+    background:#fef3c7;
+    color:#92400e
+}
+
+.danger{
+    background:#fee2e2;
+    color:#991b1b
+}
+
+.search-box{margin-bottom:20px}
+
+.search-box input{
+    width:100%;
+    padding:12px;
+    border:1px solid #cbd5e1;
+    border-radius:8px
+}
+
+.form-box{
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    margin-bottom:20px;
+    box-shadow:0 2px 8px rgba(0,0,0,.05)
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    z-index:999;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.55);
+    justify-content:center;
+    align-items:center
+}
+
+.modal-content{
+    background:white;
+    width:450px;
+    max-width:90%;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 10px 30px rgba(0,0,0,.2)
+}
+
+.modal-content h2{
+    color:#ea580c;
+    margin-bottom:20px
+}
+
+.close{
+    float:right;
+    font-size:25px;
+    cursor:pointer;
+    color:#64748b
+}
+
+.receipt{
+    border:1px solid #e2e8f0;
+    padding:20px;
+    border-radius:10px
+}
+
+.receipt-row{
+    display:flex;
+    justify-content:space-between;
+    padding:9px 0;
+    border-bottom:1px solid #f1f5f9
+}
+
+.receipt-total{
+    font-size:20px;
+    font-weight:bold;
+    color:#ea580c
+}
+
+@media(max-width:1100px){
+    .cards{grid-template-columns:1fr 1fr}
+}
+
+@media(max-width:900px){
+    .sidebar{width:200px}
+    .content{margin-left:200px}
+    .logout{width:170px}
+}
+
+@media(max-width:600px){
+    .sidebar{
+        position:relative;
+        width:100%;
+        height:auto
+    }
+
+    .logout{
+        position:relative;
+        left:0;
+        bottom:0;
+        width:100%;
+        margin-top:15px
+    }
+
+    .content{
+        margin-left:0;
+        padding:15px
+    }
+
+    .cards{grid-template-columns:1fr}
+    .form-grid{grid-template-columns:1fr}
+
+    .topbar{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:10px
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+
+<div class="login-box">
+
+<div class="logo">
+<h1>DAFA</h1>
+<p>Vendor Management System</p>
+</div>
+
+<form onsubmit="login(event)">
+
+<div class="input-group">
+<label>Email</label>
+<input type="email"
+id="loginEmail"
+placeholder="Enter your email"
+required>
+</div>
+
+<div class="input-group">
+<label>Password</label>
+<input type="password"
+id="loginPassword"
+placeholder="Enter your password"
+required>
+</div>
+
+<button class="btn btn-primary" type="submit">
+Log In
+</button>
+
+</form>
+
+<div class="auth-switch">
+Don't have an account?
+<span onclick="showRegister()">Register</span>
+</div>
+
+</div>
+</div>
+
+
+<!-- REGISTER -->
+<div id="registerScreen" style="display:none">
+
+<div class="login-box">
+
+<div class="logo">
+<h1>DAFA</h1>
+<p>Create Vendor Account</p>
+</div>
+
+<form onsubmit="register(event)">
+
+<div class="input-group">
+<label>Full Name</label>
+<input type="text"
+id="regName"
+placeholder="Enter your full name"
+required>
+</div>
+
+<div class="input-group">
+<label>Email</label>
+<input type="email"
+id="regEmail"
+placeholder="Enter your email"
+required>
+</div>
+
+<div class="input-group">
+<label>Company / Vendor Name</label>
+<input type="text"
+id="regCompany"
+placeholder="Enter company name"
+required>
+</div>
+
+<div class="input-group">
+<label>Password</label>
+<input type="password"
+id="regPassword"
+placeholder="Create password"
+required>
+</div>
+
+<button class="btn btn-primary" type="submit">
+Register
+</button>
+
+</form>
+
+<div class="auth-switch">
+Already have an account?
+<span onclick="showLogin()">Log In</span>
+</div>
+
+</div>
+</div>
+
+
+<!-- MAIN APP -->
+<div id="mainApp">
+
+<div class="sidebar">
+
+<h2>DAFA</h2>
+
+<div class="menu">
+
+<button class="active"
+onclick="showSection('dashboard',this)">
+🏠 Dashboard
+</button>
+
+<button onclick="showSection('vendors',this)">
+🏪 Vendors
+</button>
+
+<button onclick="showSection('deliveries',this)">
+🚚 Deliveries
+</button>
+
+<button onclick="showSection('inventory',this)">
+📦 Inventory
+</button>
+
+<button onclick="showSection('payments',this)">
+💰 Payments
+</button>
+
+</div>
+
+<button class="logout" onclick="logout()">
+Log Out
+</button>
+
+</div>
+
+
+<div class="content">
+
+<div class="topbar">
+
+<div>
+<h2 id="pageTitle">Dashboard</h2>
+</div>
+
+<div class="user-info">
+Logged in as:
+<strong id="userDisplay">Vendor</strong>
+</div>
+
+</div>
+
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="section active">
+
+<div class="cards">
+
+<div class="card">
+<h4>Total Vendors</h4>
+<h2 id="totalVendors">5</h2>
+</div>
+
+<div class="card">
+<h4>Total Deliveries</h4>
+<h2 id="totalDeliveries">5</h2>
+</div>
+
+<div class="card">
+<h4>Inventory Items</h4>
+<h2 id="totalInventory">4</h2>
+</div>
+
+<div class="card">
+<h4>Budget Used</h4>
+<h2 id="totalPayments">RM 100,000.00</h2>
+</div>
+
+</div>
+
+
+<!-- BUDGET -->
+<div class="budget-card">
+
+<h4>Total Budget</h4>
+
+<h2 id="totalBudget">
+RM 100,000.00
+</h2>
+
+<div class="used-info">
+Budget Used:
+<strong id="budgetUsed">
+RM 100,000.00
+</strong>
+</div>
+
+<div class="budget-info">
+Available Budget:
+<strong id="remainingBudget">
+RM 0.00
+</strong>
+</div>
+
+<div class="progress">
+<div class="progress-bar"
+id="budgetProgress">
+</div>
+</div>
+
+<p style="margin-top:8px;font-size:13px;color:#64748b">
+Budget utilisation:
+<strong id="budgetPercentage">
+100.00%
+</strong>
+</p>
+
+</div>
+
+
+<!-- RECENT DELIVERIES -->
+<div class="table-box">
+
+<h3>Recent Deliveries</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Shop</th>
+<th>Item</th>
+<th>Quantity</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="dashboardDeliveryTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- VENDORS -->
+<div id="vendors" class="section">
+
+<div class="table-box">
+
+<h3>Vendor / Shop List</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>No.</th>
+<th>Vendor / Shop</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="vendorTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- DELIVERIES -->
+<div id="deliveries" class="section">
+
+<div class="form-box">
+
+<h3>Add New Delivery</h3>
+
+<div class="form-grid">
+
+<div class="input-group">
+
+<label>Shop</label>
+
+<select id="deliveryShop">
+
+<option>Kopi & Roti Bangsar</option>
+<option>Cafe Sutera Utama</option>
+<option>Kiosk Campus U</option>
+<option>Warung Corner Subang</option>
+<option>Marmalade Cafe</option>
+
+</select>
+
+</div>
+
+
+<div class="input-group">
+
+<label>Item</label>
+
+<input type="text"
+id="deliveryItem"
+placeholder="Enter item name">
+
+</div>
+
+
+<div class="input-group">
+
+<label>Quantity Sent</label>
+
+<input type="number"
+id="deliveryQty"
+min="1"
+placeholder="Enter quantity">
+
+</div>
+
+
+<div class="input-group">
+
+<label>Price (RM)</label>
+
+<input type="number"
+id="deliveryPrice"
+step="0.01"
+placeholder="Enter price">
+
+</div>
+
+</div>
+
+
+<button class="btn btn-primary"
+onclick="addDelivery()">
+Add Delivery
+</button>
+
+</div>
+
+
+<div class="search-box">
+
+<input type="text"
+id="deliverySearch"
+placeholder="Search delivery..."
+onkeyup="searchDeliveries()">
+
+</div>
+
+
+<div class="table-box">
+
+<h3>Delivery Records</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Shop</th>
+<th>Item</th>
+<th>Sent</th>
+<th>Returned</th>
+<th>Price</th>
+<th>Status</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="deliveryTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- INVENTORY -->
+<div id="inventory" class="section">
+
+<div class="table-box">
+
+<h3>Inventory Management</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>Code</th>
+<th>Item</th>
+<th>Initial Qty</th>
+<th>Remaining Qty</th>
+<th>Expiry</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="inventoryTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<!-- PAYMENTS -->
+<div id="payments" class="section">
+
+<div class="form-box">
+
+<h3>Add New Payment</h3>
+
+<div class="form-grid">
+
+
+<div class="input-group">
+
+<label>Shop</label>
+
+<select id="paymentShop">
+
+<option>Kopi & Roti Bangsar</option>
+<option>Cafe Sutera Utama</option>
+<option>Kiosk Campus U</option>
+<option>Warung Corner Subang</option>
+<option>Marmalade Cafe</option>
+
+</select>
+
+</div>
+
+
+<div class="input-group">
+
+<label>Payment Method</label>
+
+<select id="paymentMethod"
+onchange="updatePaymentOption()">
+
+<option value="Online Banking (FPX)">
+Online Banking (FPX)
+</option>
+
+<option value="E-Wallet">
+E-Wallet
+</option>
+
+<option value="Credit/Debit Card">
+Credit/Debit Card
+</option>
+
+<option value="Cash">
+Cash
+</option>
+
+</select>
+
+</div>
+
+
+<div class="input-group">
+
+<label>Bank / E-Wallet</label>
+
+<select id="paymentProvider"></select>
+
+</div>
+
+
+<div class="input-group">
+
+<label>Reference</label>
+
+<input type="text"
+id="paymentReference"
+placeholder="Example: TRX-123456">
+
+</div>
+
+
+<div class="input-group">
+
+<label>Amount (RM)</label>
+
+<input type="number"
+id="paymentAmount"
+step="0.01"
+min="0"
+placeholder="Enter amount">
+
+</div>
+
+</div>
+
+
+<button class="btn btn-primary"
+onclick="addPayment()">
+💳 Add Payment
+</button>
+
+</div>
+
+
+<div class="table-box">
+
+<h3>Payment Ledger</h3>
+
+<table>
+
+<thead>
+
+<tr>
+<th>Date</th>
+<th>Shop</th>
+<th>Method</th>
+<th>Provider</th>
+<th>Reference</th>
+<th>Amount</th>
+<th>Status</th>
+<th>Receipt</th>
+</tr>
+
+</thead>
+
+<tbody id="paymentTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- STATUS MODAL -->
+<div class="modal" id="statusModal">
+
+<div class="modal-content">
+
+<span class="close"
+onclick="closeStatusModal()">
+&times;
+</span>
+
+<h2>Update Delivery Status</h2>
+
+<p id="statusDeliveryID"></p>
+
+<div class="input-group">
+
+<label>Select Status</label>
+
+<select id="newStatus">
+
+<option value="Dalam Proses">
+Dalam Proses
+</option>
+
+<option value="Selesai">
+Selesai
+</option>
+
+<option value="Ada Pertikaian">
+Ada Pertikaian
+</option>
+
+</select>
+
+</div>
+
+<button class="btn btn-primary"
+onclick="saveStatus()">
+Save Status
+</button>
+
+</div>
+
+</div>
+
+
+<!-- RECEIPT MODAL -->
+<div class="modal" id="receiptModal">
+
+<div class="modal-content">
+
+<span class="close"
+onclick="closeReceipt()">
+&times;
+</span>
+
+<h2>DAFA Receipt</h2>
+
+<div class="receipt"
+id="receiptContent">
+</div>
+
+<br>
+
+<button class="btn btn-primary"
+onclick="printReceipt()">
+🖨️ Print Receipt
+</button>
+
+<button class="btn btn-secondary"
+onclick="closeReceipt()">
+Close
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================
+BUDGET
+========================= */
+
+const TOTAL_BUDGET = 100000;
+
+const USED_BUDGET = 100000;
+
+
+/* =========================
+DATA
+========================= */
+
+let vendors = [
+
+"Kopi & Roti Bangsar",
+"Cafe Sutera Utama",
+"Kiosk Campus U",
+"Warung Corner Subang",
+"Marmalade Cafe"
+
+];
+
+
+let deliveries = [
+
+{
+id:"DEL-1001",
+shop:"Kopi & Roti Bangsar",
+item:"Nasi Lemak Ayam Berempah",
+qtySent:20,
+qtyReturned:2,
+price:6.50,
+status:"Dalam Proses",
+notes:"Dikelola oleh Hazwanie & Fatiha"
+},
+
+{
+id:"DEL-1002",
+shop:"Cafe Sutera Utama",
+item:"Sandwich Telur & Mayo",
+qtySent:15,
+qtyReturned:0,
+price:4.00,
+status:"Selesai",
+notes:"Semua habis dijual sebelum jam 2:00 PM"
+},
+
+{
+id:"DEL-1003",
+shop:"Kiosk Campus U",
+item:"Muffin Coklat Chip",
+qtySent:25,
+qtyReturned:5,
+price:3.00,
+status:"Ada Pertikaian",
+notes:"Disemak oleh Nurul Farizah"
+},
+
+{
+id:"DEL-1004",
+shop:"Warung Corner Subang",
+item:"Karipap Daging (Pack 3pcs)",
+qtySent:30,
+qtyReturned:3,
+price:3.50,
+status:"Dalam Proses",
+notes:"Dihantar jam 7:00 AM"
+},
+
+{
+id:"DEL-1005",
+shop:"Marmalade Cafe",
+item:"Kuih Seri Muka (Pack 4pcs)",
+qtySent:12,
+qtyReturned:1,
+price:3.50,
+status:"Selesai",
+notes:"Bayaran tunai diserah di kaunter"
+
+}
+
+];
+
+
+let inventory = [
+
+{
+code:"BTC-0821",
+name:"Nasi Lemak Ayam Berempah",
+qtyInit:100,
+qtyRem:35,
+expiry:"2026-09-18",
+status:"Fresh"
+},
+
+{
+code:"BTC-0822",
+name:"Sandwich Telur & Mayo",
+qtyInit:60,
+qtyRem:15,
+expiry:"2026-09-16",
+status:"Expiring Soon"
+},
+
+{
+code:"BTC-0823",
+name:"Muffin Coklat Chip",
+qtyInit:80,
+qtyRem:20,
+expiry:"2026-09-20",
+status:"Fresh"
+},
+
+{
+code:"BTC-0824",
+name:"Karipap Daging (Pack 3pcs)",
+qtyInit:120,
+qtyRem:40,
+expiry:"2026-09-19",
+status:"Fresh"
+}
+
+];
+
+
+let payments = [
+
+{
+date:"15 Sep 2026",
+shop:"Cafe Sutera Utama",
+method:"Online Banking (FPX)",
+provider:"Maybank2u",
+ref:"TRX-982310",
+amount:60.00,
+status:"Disahkan Automatik"
+},
+
+{
+date:"14 Sep 2026",
+shop:"Marmalade Cafe",
+method:"Cash",
+provider:"Cash Counter",
+ref:"CASH-0021",
+amount:38.50,
+status:"Disahkan Automatik"
+},
+
+{
+date:"13 Sep 2026",
+shop:"Kopi & Roti Bangsar",
+method:"Online Banking (FPX)",
+provider:"CIMB Clicks",
+ref:"TRX-773129",
+amount:150.00,
+status:"Disahkan Automatik"
+}
+
+];
+
+
+let selectedDeliveryID = null;
+
+let currentReceipt = null;
+
+
+/* =========================
+LOGIN
+========================= */
+
+function login(event){
+
+event.preventDefault();
+
+let email =
+document.getElementById("loginEmail").value;
+
+let password =
+document.getElementById("loginPassword").value;
+
+let users =
+JSON.parse(
+localStorage.getItem("dafa_users") || "[]"
+);
+
+
+if(
+email === "admin@dafa.com" &&
+password === "123456"
+){
+
+let admin = {
+
+name:"DAFA Admin",
+email:email,
+company:"DAFA Vendor"
+
+};
+
+localStorage.setItem(
+"dafa_user",
+JSON.stringify(admin)
+);
+
+showApp("DAFA Admin");
+
+return;
+
+}
+
+
+let user = users.find(
+u =>
+u.email === email &&
+u.password === password
+);
+
+
+if(!user){
+
+alert(
+"Incorrect email or password.\n\nDemo Login:\nadmin@dafa.com\n123456"
+);
+
+return;
+
+}
+
+
+localStorage.setItem(
+"dafa_user",
+JSON.stringify(user)
+);
+
+showApp(user.name);
+
+}
+
+
+/* =========================
+REGISTER
+========================= */
+
+function register(event){
+
+event.preventDefault();
+
+let name =
+document.getElementById("regName").value;
+
+let email =
+document.getElementById("regEmail").value;
+
+let company =
+document.getElementById("regCompany").value;
+
+let password =
+document.getElementById("regPassword").value;
+
+let users =
+JSON.parse(
+localStorage.getItem("dafa_users") || "[]"
+);
+
+
+if(
+users.some(u => u.email === email)
+){
+
+alert("Email already registered.");
+
+return;
+
+}
+
+
+users.push({
+
+name:name,
+email:email,
+company:company,
+password:password
+
+});
+
+
+localStorage.setItem(
+"dafa_users",
+JSON.stringify(users)
+);
+
+alert("Registration successful!");
+
+showLogin();
+
+}
+
+
+/* =========================
+LOGIN / REGISTER
+========================= */
+
+function showLogin(){
+
+document.getElementById("loginScreen")
+.style.display="flex";
+
+document.getElementById("registerScreen")
+.style.display="none";
+
+document.getElementById("mainApp")
+.style.display="none";
+
+}
+
+
+function showRegister(){
+
+document.getElementById("loginScreen")
+.style.display="none";
+
+document.getElementById("registerScreen")
+.style.display="flex";
+
+document.getElementById("mainApp")
+.style.display="none";
+
+}
+
+
+/* =========================
+SHOW APP
+========================= */
+
+function showApp(name){
+
+document.getElementById("loginScreen")
+.style.display="none";
+
+document.getElementById("registerScreen")
+.style.display="none";
+
+document.getElementById("mainApp")
+.style.display="block";
+
+document.getElementById("userDisplay")
+.innerText=name;
+
+updatePaymentOption();
+
+renderAll();
+
+}
+
+
+/* =========================
+LOGOUT
+========================= */
+
+function logout(){
+
+localStorage.removeItem("dafa_user");
+
+showLogin();
+
+}
+
+
+/* =========================
+NAVIGATION
+========================= */
+
+function showSection(section,button){
+
+document.querySelectorAll(".section")
+.forEach(s =>
+s.classList.remove("active")
+);
+
+document.getElementById(section)
+.classList.add("active");
+
+document.querySelectorAll(".menu button")
+.forEach(b =>
+b.classList.remove("active")
+);
+
+button.classList.add("active");
+
+
+let titles = {
+
+dashboard:"Dashboard",
+vendors:"Vendors",
+deliveries:"Deliveries",
+inventory:"Inventory",
+payments:"Payments"
+
+};
+
+document.getElementById("pageTitle")
+.innerText=titles[section];
+
+}
+
+
+/* =========================
+STATUS BADGE
+========================= */
+
+function statusBadge(status){
+
+let className="warning";
+
+
+if(
+status==="Selesai" ||
+status==="Fresh" ||
+status==="Disahkan Automatik" ||
+status==="Active"
+){
+
+className="success";
+
+}
+
+
+if(status==="Ada Pertikaian"){
+
+className="danger";
+
+}
+
+
+return `
+<span class="badge ${className}">
+${status}
+</span>
+`;
+
+}
+
+
+/* =========================
+VENDORS
+========================= */
+
+function renderVendors(){
+
+let html="";
+
+
+vendors.forEach((vendor,index)=>{
+
+html += `
+
+<tr>
+
+<td>${index+1}</td>
+
+<td>${vendor}</td>
+
+<td>${statusBadge("Active")}</td>
+
+</tr>
+
+`;
+
+});
+
+
+document.getElementById("vendorTable")
+.innerHTML=html;
+
+}
+
+
+/* =========================
+DELIVERIES
+========================= */
+
+function renderDeliveries(){
+
+let html="";
+
+
+deliveries.forEach(d=>{
+
+html += `
+
+<tr>
+
+<td>${d.id}</td>
+
+<td>${d.shop}</td>
+
+<td>${d.item}</td>
+
+<td>${d.qtySent}</td>
+
+<td>${d.qtyReturned}</td>
+
+<td>RM ${d.price.toFixed(2)}</td>
+
+<td>${statusBadge(d.status)}</td>
+
+<td>
+
+<button class="action-btn view-btn"
+onclick="viewDeliveryReceipt('${d.id}')">
+🧾 Receipt
+</button>
+
+<button class="action-btn status-btn"
+onclick="openStatusModal('${d.id}')">
+✏️ Status
+</button>
+
+<button class="action-btn delete-btn"
+onclick="deleteDelivery('${d.id}')">
+🗑️ Delete
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+
+document.getElementById("deliveryTable")
+.innerHTML=html;
+
+
+/* DASHBOARD */
+
+let dashboardHTML="";
+
+
+deliveries.slice(0,5).forEach(d=>{
+
+dashboardHTML += `
+
+<tr>
+
+<td>${d.id}</td>
+
+<td>${d.shop}</td>
+
+<td>${d.item}</td>
+
+<td>${d.qtySent}</td>
+
+<td>${statusBadge(d.status)}</td>
+
+</tr>
+
+`;
+
+});
+
+
+document.getElementById(
+"dashboardDeliveryTable"
+).innerHTML=dashboardHTML;
+
+}
+
+
+/* =========================
+SEARCH
+========================= */
+
+function searchDeliveries(){
+
+let search =
+document.getElementById("deliverySearch")
+.value.toLowerCase();
+
+
+document.querySelectorAll("#deliveryTable tr")
+.forEach(row=>{
+
+row.style.display =
+row.innerText
+.toLowerCase()
+.includes(search)
+? ""
+: "none";
+
+});
+
+}
+
+
+/* =========================
+ADD DELIVERY
+========================= */
+
+function addDelivery(){
+
+let shop =
+document.getElementById("deliveryShop").value;
+
+let item =
+document.getElementById("deliveryItem")
+.value.trim();
+
+let qty =
+parseInt(
+document.getElementById("deliveryQty").value
+);
+
+let price =
+parseFloat(
+document.getElementById("deliveryPrice").value
+);
+
+
+if(!item || !qty || !price){
+
+alert(
+"Please complete all delivery information."
+);
+
+return;
+
+}
+
+
+let newNumber =
+1001 + deliveries.length;
+
+let newID =
+"DEL-" + newNumber;
+
+
+deliveries.unshift({
+
+id:newID,
+shop:shop,
+item:item,
+qtySent:qty,
+qtyReturned:0,
+price:price,
+status:"Dalam Proses",
+notes:"New delivery"
+
+});
+
+
+document.getElementById("deliveryItem")
+.value="";
+
+document.getElementById("deliveryQty")
+.value="";
+
+document.getElementById("deliveryPrice")
+.value="";
+
+
+renderAll();
+
+alert("Delivery added successfully!");
+
+}
+
+
+/* =========================
+DELETE DELIVERY
+========================= */
+
+function deleteDelivery(id){
+
+if(
+!confirm(
+"Are you sure you want to delete this delivery?"
+)
+){
+
+return;
+
+}
+
+
+deliveries =
+deliveries.filter(
+d => d.id !== id
+);
+
+renderAll();
+
+}
+
+
+/* =========================
+STATUS
+========================= */
+
+function openStatusModal(id){
+
+selectedDeliveryID=id;
+
+let delivery =
+deliveries.find(
+d => d.id === id
+);
+
+if(!delivery){
+return;
+}
+
+
+document.getElementById(
+"statusDeliveryID"
+)
+.innerText =
+"Delivery ID: " + delivery.id;
+
+
+document.getElementById("newStatus")
+.value=delivery.status;
+
+
+document.getElementById("statusModal")
+.style.display="flex";
+
+}
+
+
+function saveStatus(){
+
+if(!selectedDeliveryID){
+return;
+}
+
+
+let delivery =
+deliveries.find(
+d => d.id === selectedDeliveryID
+);
+
+
+if(delivery){
+
+delivery.status =
+document.getElementById(
+"newStatus"
+).value;
+
+}
+
+
+closeStatusModal();
+
+renderAll();
+
+alert(
+"Delivery status updated successfully!"
+);
+
+}
+
+
+function closeStatusModal(){
+
+document.getElementById(
+"statusModal"
+).style.display="none";
+
+selectedDeliveryID=null;
+
+}
+
+
+/* =========================
+INVENTORY
+========================= */
+
+function renderInventory(){
+
+let html="";
+
+
+inventory.forEach(i=>{
+
+html += `
+
+<tr>
+
+<td>${i.code}</td>
+
+<td>${i.name}</td>
+
+<td>${i.qtyInit}</td>
+
+<td>${i.qtyRem}</td>
+
+<td>${i.expiry}</td>
+
+<td>${statusBadge(i.status)}</td>
+
+</tr>
+
+`;
+
+});
+
+
+document.getElementById(
+"inventoryTable"
+).innerHTML=html;
+
+}
+
+
+/* =========================
+PAYMENT METHOD
+========================= */
+
+function updatePaymentOption(){
+
+let method =
+document.getElementById(
+"paymentMethod"
+).value;
+
+let provider =
+document.getElementById(
+"paymentProvider"
+);
+
+provider.innerHTML="";
+
+
+/* ONLINE BANKING */
+
+if(
+method === "Online Banking (FPX)"
+){
+
+provider.innerHTML=`
+
+<option>Maybank2u</option>
+
+<option>CIMB Clicks</option>
+
+<option>Bank Islam</option>
+
+<option>RHB Now</option>
+
+<option>Public Bank</option>
+
+<option>Hong Leong Connect</option>
+
+<option>AmBank</option>
+
+`;
+
+}
+
+
+/* E-WALLET */
+
+else if(
+method === "E-Wallet"
+){
+
+provider.innerHTML=`
+
+<option>Touch 'n Go eWallet</option>
+
+<option>GrabPay</option>
+
+<option>Boost</option>
+
+<option>ShopeePay</option>
+
+<option>MAE</option>
+
+`;
+
+}
+
+
+/* CARD */
+
+else if(
+method === "Credit/Debit Card"
+){
+
+provider.innerHTML=`
+
+<option>Visa</option>
+
+<option>Mastercard</option>
+
+`;
+
+}
+
+
+/* CASH */
+
+else{
+
+provider.innerHTML=`
+
+<option>Cash Counter</option>
+
+<option>Cash Collection</option>
+
+`;
+
+}
+
+}
+
+
+/* =========================
+ADD PAYMENT
+========================= */
+
+function addPayment(){
+
+let shop =
+document.getElementById(
+"paymentShop"
+).value;
+
+let method =
+document.getElementById(
+"paymentMethod"
+).value;
+
+let provider =
+document.getElementById(
+"paymentProvider"
+).value;
+
+let ref =
+document.getElementById(
+"paymentReference"
+).value.trim();
+
+let amount =
+parseFloat(
+document.getElementById(
+"paymentAmount"
+).value
+);
+
+
+if(!ref || !amount){
+
+alert(
+"Please complete payment information."
+);
+
+return;
+
+}
+
+
+let today = new Date();
+
+
+let date =
+today.toLocaleDateString(
+"en-GB",
+{
+day:"2-digit",
+month:"short",
+year:"numeric"
+}
+);
+
+
+payments.unshift({
+
+date:date,
+
+shop:shop,
+
+method:method,
+
+provider:provider,
+
+ref:ref,
+
+amount:amount,
+
+status:"Disahkan Automatik"
+
+});
+
+
+document.getElementById(
+"paymentReference"
+).value="";
+
+document.getElementById(
+"paymentAmount"
+).value="";
+
+
+renderPayments();
+
+
+alert(
+"Payment added successfully!"
+);
+
+}
+
+
+/* =========================
+PAYMENTS
+========================= */
+
+function renderPayments(){
+
+let html="";
+
+
+payments.forEach(
+(p,index)=>{
+
+html += `
+
+<tr>
+
+<td>${p.date}</td>
+
+<td>${p.shop}</td>
+
+<td>${p.method}</td>
+
+<td>${p.provider}</td>
+
+<td>${p.ref}</td>
+
+<td>
+RM ${p.amount.toFixed(2)}
+</td>
+
+<td>
+${statusBadge(p.status)}
+</td>
+
+<td>
+
+<button
+class="action-btn view-btn"
+onclick="viewPaymentReceipt(${index})">
+
+🧾 View Receipt
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+
+document.getElementById(
+"paymentTable"
+).innerHTML=html;
+
+}
+
+
+/* =========================
+DELIVERY RECEIPT
+========================= */
+
+function viewDeliveryReceipt(id){
+
+let delivery =
+deliveries.find(
+d => d.id === id
+);
+
+if(!delivery){
+return;
+}
+
+
+currentReceipt={
+type:"delivery",
+data:delivery
+};
+
+
+let total =
+delivery.qtySent *
+delivery.price;
+
+
+document.getElementById(
+"receiptContent"
+).innerHTML=`
+
+<div style="text-align:center;margin-bottom:20px;">
+
+<h3>DAFA Vendor System</h3>
+
+<p>Delivery Receipt</p>
+
+</div>
+
+
+<div class="receipt-row">
+
+<span>Delivery ID</span>
+
+<strong>${delivery.id}</strong>
+
+</div>
+
+
+<div class="receipt-row">
+
+<span>Shop</span>
+
+<strong>${delivery.shop}</strong>
+
+</div>
+
+
+<div class="receipt-row">
+
+<span>Item</span>
+
+<strong>${delivery.item}</strong>
+
+</div>
+
+
+<div class="receipt-row">
+
+<span>Quantity Sent</span>
+
+<strong>${delivery.qtySent}</strong>
+
+</div>
+
+
+<div class="receipt-row">
+
+<span>Quantity Returned</span>
+
+<strong>${delivery.qtyReturned}</strong>
+
+</div>
+
+
+<div class="receipt-row">
+
+<span>Unit Price</span>
+
+<strong>
+RM ${delivery.price.toFixed(2)}
+</strong>
+
+</div>
+
+
+<div class="receipt-row">
+
+<span>Status</span>
+
+<strong>${delivery.status}</strong>
+
+</div>
+
+
+<div class="receipt-row receipt-total">
+
+<span>Total</span>
+
+<strong>
+RM ${total.toFixed(2)}
+</strong>
+
+</div>
+
+
+<p style="margin-top:15px;color:#64748b">
+
+Notes: ${delivery.notes}
+
+</p>
+
+`;
+
+
+document.getElementById(
+"receiptModal"
+).style.display="flex";
+
+}
+
+
+/* =========================
+PAYMENT RECEIPT
+========================= */
+
+function viewPaymentReceipt(index){
+
+let payment =
+payments[index];
+
+
+currentReceipt={
+
+type:"payment",
+
+data:payment
+
+};
+
+
+document.getElementById(
+"receiptContent"
+).innerHTML=`
+
+<div style="text-align:center;margin-bottom:20px;">
+
+<h3>DAFA Vendor System</h3>
+
+<p>Payment Receipt</p>
+
+</div>
+
+
+<div class="receipt-row">
+
+<span>Date</span>
+
+<strong>${payment.date}</strong>
+
+</div>
+
+
+<div class="receipt-row">
+
+<span>Shop</span>
+
+<strong>${payment.shop}</strong>
+
+</div>
+
+
+<div class="receipt-row">
+
+<span>Payment Method</span>
+
+<strong>${payment.method}</strong>
+
+</div>
+
+
+<div class="receipt-row">
+
+<span>Bank / E-Wallet</span>
+
+<strong>${payment.provider}</strong>
+
+</div>
+
+
+<div class="receipt-row">
+
+<span>Reference</span>
+
+<strong>${payment.ref}</strong>
+
+</div>
+
+
+<div class="receipt-row">
+
+<span>Status</span>
+
+<strong>${payment.status}</strong>
+
+</div>
+
+
+<div class="receipt-row receipt-total">
+
+<span>Amount Paid</span>
+
+<strong>
+RM ${payment.amount.toFixed(2)}
+</strong>
+
+</div>
+
+`;
+
+
+document.getElementById(
+"receiptModal"
+).style.display="flex";
+
+}
+
+
+/* =========================
+CLOSE RECEIPT
+========================= */
+
+function closeReceipt(){
+
+document.getElementById(
+"receiptModal"
+).style.display="none";
+
+currentReceipt=null;
+
+}
+
+
+/* =========================
+PRINT RECEIPT
+========================= */
+
+function printReceipt(){
+
+if(!currentReceipt){
+return;
+}
+
+
+let receipt =
+document.getElementById(
+"receiptContent"
+).innerHTML;
+
+
+let printWindow =
+window.open(
+"",
+"",
+"width=600,height=700"
+);
+
+
+printWindow.document.write(`
+
+<html>
+
+<head>
+
+<title>DAFA Receipt</title>
+
+<style>
+
+body{
+font-family:Arial;
+padding:30px;
+color:#222
+}
+
+h2,h3{
+text-align:center
+}
+
+.receipt-row{
+display:flex;
+justify-content:space-between;
+padding:10px 0;
+border-bottom:1px solid #eee
+}
+
+.receipt-total{
+font-size:20px;
+font-weight:bold
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>DAFA Vendor System</h2>
+
+${receipt}
+
+</body>
+
+</html>
+
+`);
+
+
+printWindow.document.close();
+
+printWindow.focus();
+
+printWindow.print();
+
+}
+
+
+/* =========================
+UPDATE DASHBOARD
+========================= */
+
+function updateDashboard(){
+
+document.getElementById(
+"totalVendors"
+).innerText =
+vendors.length;
+
+
+document.getElementById(
+"totalDeliveries"
+).innerText =
+deliveries.length;
+
+
+document.getElementById(
+"totalInventory"
+).innerText =
+inventory.length;
+
+
+/* BUDGET USED */
+
+let total =
+USED_BUDGET;
+
+
+let money =
+total.toLocaleString(
+"en-MY",
+{
+minimumFractionDigits:2
+}
+);
+
+
+document.getElementById(
+"totalPayments"
+).innerText =
+"RM " + money;
+
+
+document.getElementById(
+"budgetUsed"
+).innerText =
+"RM " + money;
+
+
+/* REMAINING */
+
+let remaining =
+TOTAL_BUDGET -
+USED_BUDGET;
+
+
+document.getElementById(
+"totalBudget"
+).innerText =
+"RM " +
+TOTAL_BUDGET.toLocaleString(
+"en-MY",
+{
+minimumFractionDigits:2
+}
+);
+
+
+document.getElementById(
+"remainingBudget"
+).innerText =
+"RM " +
+remaining.toLocaleString(
+"en-MY",
+{
+minimumFractionDigits:2
+}
+);
+
+
+/* PERCENTAGE */
+
+let percentage =
+(USED_BUDGET / TOTAL_BUDGET) *
+100;
+
+
+document.getElementById(
+"budgetProgress"
+).style.width =
+percentage + "%";
+
+
+document.getElementById(
+"budgetPercentage"
+).innerText =
+percentage.toFixed(2) + "%";
+
+}
+
+
+/* =========================
+RENDER ALL
+========================= */
+
+function renderAll(){
+
+renderVendors();
+
+renderDeliveries();
+
+renderInventory();
+
+renderPayments();
+
+updateDashboard();
+
+}
+
+
+/* =========================
+CHECK LOGIN
+========================= */
+
+window.onload=function(){
+
+let user =
+localStorage.getItem(
+"dafa_user"
+);
+
+
+if(user){
+
+try{
+
+let data =
+JSON.parse(user);
+
+showApp(data.name);
+
+}
+
+catch(e){
+
+showLogin();
+
+}
+
+}
+
+else{
+
+showLogin();
+
+}
+
+};
+
+
+/* =========================
+CLOSE MODAL OUTSIDE
+========================= */
+
+window.onclick=function(event){
+
+let statusModal =
+document.getElementById(
+"statusModal"
+);
+
+let receiptModal =
+document.getElementById(
+"receiptModal"
+);
+
+
+if(
+event.target === statusModal
+){
+
+closeStatusModal();
+
+}
+
+
+if(
+event.target === receiptModal
+){
+
+closeReceipt();
+
+}
+
+};
+
+</script>
+
+</body>
+</html>
